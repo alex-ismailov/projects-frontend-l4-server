@@ -1,6 +1,6 @@
 // @ts-check
 
-import path from 'path';
+const path = require('path');
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // const isProduction = process.env.NODE_ENV === 'production';
 // const isDevelopment = !isProduction;
@@ -15,12 +15,14 @@ module.exports = {
   },
   output: {
     path: `${__dirname}/dist/public`,
+    publicPath: '/assets/',
   },
   devServer: {
     contentBase: path.join(__dirname, 'dist', 'public'),
     // publicPath: '/assets/',
     contentBasePublicPath: '/assets/',
     compress: true,
+    publicPath: '/assets/',
   },
   plugins: [
     // new MiniCssExtractPlugin(),
@@ -30,7 +32,18 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              presets: [
+                ['@babel/env'],
+                '@babel/react',
+              ],
+            },
+          },
+        ],
       },
       {
         test: /\.s[ac]ss$/i,

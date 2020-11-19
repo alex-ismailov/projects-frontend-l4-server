@@ -29,7 +29,7 @@ const buildState = (defaultState) => {
   return state;
 };
 
-export default (app, io, defaultState = {}) => {
+export default (app, defaultState = {}) => {
   const state = buildState(defaultState);
 
   app
@@ -65,7 +65,7 @@ export default (app, io, defaultState = {}) => {
       };
 
       reply.send(data);
-      io.emit('newChannel', data);
+      app.io.emit('newChannel', data);
     })
     .delete('/api/v1/channels/:id', (req, reply) => {
       const channelId = Number(req.params.id);
@@ -80,7 +80,7 @@ export default (app, io, defaultState = {}) => {
       };
 
       reply.send(data);
-      io.emit('removeChannel', data);
+      app.io.emit('removeChannel', data);
     })
     .patch('/api/v1/channels/:id', (req, reply) => {
       const channelId = Number(req.params.id);
@@ -97,7 +97,7 @@ export default (app, io, defaultState = {}) => {
         },
       };
       reply.send(data);
-      io.emit('renameChannel', data);
+      app.io.emit('renameChannel', data);
     })
     .get('/api/v1/channels/:channelId/messages', (req, reply) => {
       const messages = state.messages.filter((m) => m.channelId === Number(req.params.channelId));
@@ -128,6 +128,6 @@ export default (app, io, defaultState = {}) => {
         },
       };
       reply.send(data);
-      io.emit('newMessage', data);
+      app.io.emit('newMessage', data);
     });
 };

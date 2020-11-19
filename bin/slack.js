@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import getApp from '../index.js';
+import getApp from '../server/index.js';
 
 const port = process.env.PORT || '5000';
 const app = getApp({ port });

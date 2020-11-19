@@ -1,14 +1,18 @@
 // @ts-check
 
-import 'regenerator-runtime/runtime';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import Pug from 'pug';
-import socket from 'socket.io';
+// import socket from 'socket.io';
 import fastify from 'fastify';
+import fastifySocketIo from 'fastify-socket.io';
 import pointOfView from 'point-of-view';
 import fastifyStatic from 'fastify-static';
 // import _ from 'lodash';
 import addRoutes from './routes.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const isProduction = process.env.NODE_ENV === 'production';
 const appPath = path.join(__dirname, '..');
@@ -37,12 +41,11 @@ const setUpStaticAssets = (app) => {
 export default (options) => {
   const app = fastify({ logger: { prettyPrint: true } });
 
+  app.register(fastifySocketIo);
   setUpViews(app);
   setUpStaticAssets(app);
 
-  const io = socket(app.server);
-
-  addRoutes(app, io, options.state || {});
+  addRoutes(app, options.state || {});
 
   return app;
 };
